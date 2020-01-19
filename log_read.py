@@ -34,29 +34,31 @@ def check_change(original_stack, change_dict):
         value = value.get(key)
     return value
 
-def draw_screen(log_dict, stdscr, change_dict, row = 1, axis = 0, offset = 0, stack = []):
+row = 0
+axis = 0
+def draw_screen(log_dict, stdscr, change_dict, offset = 0, stack = []):
+    global row, axis
     max_row, max_col = stdscr.getmaxyx()
 
     for key, value in log_dict.items():
+        row += 1
         stack.append(key)
-        if row > max_row - 2:
+        if row > max_row - 5:
+            axis += 30
             row = 1
-            axis += 25
+
         if isinstance(value, dict):
             draw_str = "{}{}:".format("".join(['.' for _ in range(offset)]),key)
             stdscr.addstr(row, axis, draw_str)
             next_stack = copy.deepcopy(stack)
-            row = draw_screen(value, stdscr, change_dict, row + 1, axis, offset + 2, next_stack)
+            draw_screen(value, stdscr, change_dict, offset + 2, next_stack)
         else:
             draw_str = "{}{}: {}".format("".join(['.' for _ in range(offset)]),key, value)
             if check_change(stack, change_dict) != None:
                 stdscr.addstr(row, axis, draw_str, curses.color_pair(1))
             else:
                 stdscr.addstr(row, axis, draw_str)
-            row += 1
         stack.pop()
-
-    return row 
 
 def replay_log_file(log_file):
     log_buffer = None
@@ -80,6 +82,9 @@ def replay_log_file(log_file):
         if gap > 0:
             time.sleep(gap)
         stdscr.addstr(0,0,"=========== {} ===========".format(checkpoint))
+        global row, axis
+        row = 0
+        axis = 0
         draw_screen(log_buffer, stdscr, data)
         stdscr.refresh()
     curses.endwin()
