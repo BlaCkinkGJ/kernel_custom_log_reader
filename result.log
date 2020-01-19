@@ -1,0 +1,6 @@
+{"lines": {"config": {"nluns": 17, "nblks": 17, "nsecs": 69631}, "usage": {"data": 14, "trans": 4, "free": 1904, "emeta": 0, "closed": 10, "bad": 0, "corrupt": {"data": 10, "trans": 20, "total": 0}, "total": 1920}}, "gc": {"full": 0, "high": 0, "mid": 0, "low": 8, "empty": 2, "queue": 0}, "data": {"line": {"cur": 14}, "sec": {"cur": 29168, "left": 40320, "total": 69480}, "vsc": 69476, "map": {"weight": 29168, "total": 69632}, "meta_weight": 1}, "trans": {"line": {"cur": 4}, "sec": {"cur": 55480, "left": 14008, "total": 69480}, "vsc": 69480, "map": {"weight": 55480, "total": 69632}, "meta_weight": 1, "config": {"size": {"l2p": 544773760, "dir": 913920, "cache": 262144000, "bucket": 65536}}, "capture": {"data": 30, "journal": 35, "super": 1, "bitmap": {"data": 0, "inode": 0}, "inode": 0, "unknown": 0}, "cache": {"use": 3875, "total": 4000, "ratio": 96}}, "time": 0.015687227249145508}
+{"lines": {"config": {"nsecs": 6931}}, "time": 6.028888702392578}
+{"lines": {"usage": {"data": 24}}, "time": 15.049288749694824}
+{"lines": {"usage": {"trans": 1}}, "time": 18.056137561798096}
+{"lines": {"usage": {"trans": 3}}, "time": 19.058451890945435}
+{"lines": {"usage": {"trans": 4}}, "time": 21.062994241714478}
