@@ -7,6 +7,8 @@ import copy
 import jsondiff
 import time
 import argparse
+import zlib
+import base64
 
 program_start_time = time.time()
 
@@ -20,7 +22,14 @@ def log_write(log_file, log_buffer, secs=1.0):
                 if [str(key) for key in diff_result.keys()][0] == '$replace':
                     diff_result = copy.deepcopy(list(diff_result.values())[0])
                 diff_result['time'] = time.time() - program_start_time
-                log_file.write(("{}\n".format(diff_result)).replace("\'","\"").encode())
+                # compress sequence
+                diff_result = json.dumps(diff_result)
+                diff_result = diff_result.encode('utf-8')
+                diff_result = zlib.compress(diff_result, level=9)
+                diff_result = base64.b85encode(diff_result)
+                diff_result = diff_result.decode('ascii')
+                # write sequence
+                log_file.write("{}\n".format(diff_result).encode())
             previous_data = copy.deepcopy(data)
         else:
             time.sleep(secs)

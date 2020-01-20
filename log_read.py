@@ -6,6 +6,8 @@ import pprint
 import copy
 import curses
 import argparse
+import base64
+import zlib
 
 def readline(log_file, sep='\n'):
     line_buffer = ""
@@ -13,6 +15,10 @@ def readline(log_file, sep='\n'):
     while data != '\n':
         line_buffer += data
         data = log_file.read(1).decode()
+    line_buffer = line_buffer.encode('ascii')
+    line_buffer = base64.b85decode(line_buffer)
+    line_buffer = zlib.decompress(line_buffer)
+    line_buffer = line_buffer.decode('utf-8')
     return line_buffer
 
 # @reference: https://stackoverflow.com/questions/20656135/python-deep-merge-dictionary-dataor 
@@ -49,7 +55,7 @@ def draw_screen(log_dict, stdscr, change_dict, offset = 0, stack = []):
 
         if isinstance(value, dict):
             draw_str = "{}{}:".format("".join(['.' for _ in range(offset)]),key)
-            stdscr.addstr(row, axis, draw_str)
+            stdscr.addstr(row, axis, draw_str, curses.color_pair(0))
             next_stack = copy.deepcopy(stack)
             draw_screen(value, stdscr, change_dict, offset + 2, next_stack)
         else:
@@ -57,7 +63,7 @@ def draw_screen(log_dict, stdscr, change_dict, offset = 0, stack = []):
             if check_change(stack, change_dict) != None:
                 stdscr.addstr(row, axis, draw_str, curses.color_pair(1))
             else:
-                stdscr.addstr(row, axis, draw_str)
+                stdscr.addstr(row, axis, draw_str, curses.color_pair(0))
         stack.pop()
 
 def replay_log_file(log_file):
@@ -66,6 +72,7 @@ def replay_log_file(log_file):
     stdscr = curses.initscr()
     curses.start_color()
     curses.use_default_colors()
+    curses.init_pair(0, curses.COLOR_WHITE, -1)
     curses.init_pair(1, curses.COLOR_RED, -1)
     while log_file.read(1):
         log_file.seek(log_file.tell() - 1)
