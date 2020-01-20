@@ -35,7 +35,7 @@ def log_write(log_file, log_buffer, secs=1.0):
             time.sleep(secs)
 
 
-def log_read_process(file_path="/sys/block/mydevice/lines", secs = 1.0):
+def log_read_process(file_path, secs = 1.0):
     original_file = open(file_path, "r")
     while True:
         try:
@@ -50,7 +50,7 @@ def log_read_process(file_path="/sys/block/mydevice/lines", secs = 1.0):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Custom kernel log parser')
-    parser.add_argument('-p', '--path', type=str, default="data.json",
+    parser.add_argument('-p', '--path', type=str, default="/sys/block/mydevice/pblk/lines",
             metavar='json_log_file_path',
             help='set log file path')
     parser.add_argument('-r', '--read', type=float, default=1.0,
